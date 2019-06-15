@@ -19,8 +19,9 @@
 				v-swipeleft="e=>handleLongBox(item,index)"
 				v-swiperight="e=>handleLongBox(item,index)"
 			>
+				<p v-if="item.value===-1 && over">{{item.status===2?'¤':'⊙'}}</p>
 				<p v-if="item.status === 1">{{item.value}}</p>
-				<p v-if="item.status === 2">⊙</p>
+				<p v-if="item.status === 2">※</p>
 			</div>
 		</div>
 		<div class="bottom">
@@ -50,7 +51,7 @@ export default {
 			time: 0,
 			level: 0,
 			boxs: [],
-			win: false,
+			over: false,
 			init: false,
 			clearId: null,
 			opts: [
@@ -69,7 +70,7 @@ export default {
 			clearInterval(this.clearId);
 			const level = this.opts[this.level];
 			this.init = false;
-			this.win = false;
+			this.over = false;
 			this.row = level.row;
 			this.col = level.col;
 			this.size = Math.floor(window.screen.availWidth / this.col);
@@ -147,6 +148,9 @@ export default {
 			}, 1000);
 		},
 		handleTapBox(index, auto) {
+			if (this.over) {
+				return false;
+			}
 			auto = auto === true;
 			let box = this.boxs[index];
 			if (!this.init) {
@@ -160,23 +164,30 @@ export default {
 					near.forEach(item => {
 						this.handleTapBox(item, true);
 					});
-				} else if (box.value === -1) {
+				}
+				if (box.value === -1) {
 					alert("小怂怂你踩地雷了哦");
-					this.restart();
+					this.over = true;
+				} else {
+					this.handleover();
 				}
 			}
 		},
 		handleLongBox(item) {
+			if (this.over) {
+				return false;
+			}
 			item.flag();
 			if (item.status === 2) {
 				this.flag++;
 			} else {
 				this.flag--;
 			}
+			this.handleover();
 		},
-		handleWin() {
-			this.win = this.boxs.every(item => item.status !== 0);
-			if (this.win) {
+		handleover() {
+			this.over = this.boxs.every(item => item.status !== 0);
+			if (this.over) {
 				clearInterval(this.clearId);
 				this.opts[this.level].scope = localStorage[
 					"scope" + (this.level + 1)
@@ -266,36 +277,36 @@ html {
 					&.active {
 						background-color: gray;
 						border-style: groove;
+						&.level0 {
+							color: gray;
+						}
+						&.level1 {
+							color: white;
+						}
+						&.level2 {
+							color: khaki;
+						}
+						&.level3 {
+							color: lightsalmon;
+						}
+						&.level4 {
+							color: peru;
+						}
+						&.level5 {
+							color: orange;
+						}
+						&.level6 {
+							color: skyblue;
+						}
+						&.level7 {
+							color: purple;
+						}
+						&.level8 {
+							color: red;
+						}
 					}
 					&.flag {
 						background-color: darkgreen;
-					}
-					&.level0 {
-						color: gray;
-					}
-					&.level1 {
-						color: white;
-					}
-					&.level2 {
-						color: khaki;
-					}
-					&.level3 {
-						color: lightsalmon;
-					}
-					&.level4 {
-						color: peru;
-					}
-					&.level5 {
-						color: orange;
-					}
-					&.level6 {
-						color: skyblue;
-					}
-					&.level7 {
-						color: purple;
-					}
-					&.level8 {
-						color: red;
 					}
 				}
 			}
