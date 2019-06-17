@@ -68,6 +68,7 @@ export default {
 		};
 	},
 	mounted() {
+		const _this = this;
 		window.addEventListener("beforeunload", e => {
 			let tips = "确定要关闭本游戏吗？";
 			e.returnValue = tips;
@@ -90,12 +91,16 @@ export default {
 				"优秀",
 				"我爱土鸡",
 				"土鸡我爱你",
-				"我喜欢你哦"
+				"我喜欢你哦",
+				"你好帅",
+				"你好厉害"
 			].indexOf(key) !== -1
 		) {
 			this.life = 3;
+			this.handleSpeek("小怂怂我喜欢你哦");
 		} else {
 			this.life = 0;
+			this.handleSpeek("你是谁？快夸我！");
 		}
 	},
 	methods: {
@@ -205,16 +210,28 @@ export default {
 						box.flag();
 						this.life--;
 						this.flag++;
-						alert(`你还有${this.life}次机会踩到地雷自动插旗哦`);
+						this.handleSpeek(
+							`你还有${this.life}次机会踩到地雷自动插旗哦`
+						);
 					} else {
 						this.over = true;
-						alert("小怂怂你踩地雷了哦");
+						this.handleSpeek("嘤嘤嘤，小怂怂你踩地雷了哦");
 					}
 				} else {
 					box.trigger();
 					this.handleover();
 				}
 			}
+		},
+		handleSpeek(str, alert) {
+			alert = alert !== false;
+			try {
+				let ssu = new SpeechSynthesisUtterance(str);
+				speechSynthesis.speak(ssu);
+			} catch (e) {
+				window.alert(e.message);
+			}
+			alert && window.alert(str);
 		},
 		handleLongBox(index) {
 			if (this.over) {
@@ -237,13 +254,13 @@ export default {
 					this.opts[this.level].scope = localStorage[
 						"scope" + (this.level + 1)
 					] = this.time;
-					alert(
+					this.handleSpeek(
 						`小怂怂越来越聪明了哦！这次居然只用了${
 							this.time
 						}秒就赢了哦`
 					);
 				} else {
-					alert("小怂怂真厉害呀又赢了哦");
+					this.handleSpeek("小怂怂真厉害呀又赢了哦");
 				}
 			}
 		},
