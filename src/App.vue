@@ -77,31 +77,33 @@ export default {
 		window.addEventListener("error", e => {
 			alert(`出错啦：${e.message}`);
 		});
-		this.restart();
-		let key = window.prompt(
-			"轻触=翻开格子\n按住格子往四周拽=插小旗子",
-			"请输入金手指哦"
-		);
-		if (
-			[
-				"小怂怂",
-				"小瑶瑶",
-				"陈瑶",
-				"陈优秀",
-				"优秀",
-				"我爱土鸡",
-				"土鸡我爱你",
-				"我喜欢你哦",
-				"你好帅",
-				"你好厉害"
-			].indexOf(key) !== -1
-		) {
-			this.life = 3;
-			this.handleSpeek("小怂怂我喜欢你哦");
-		} else {
-			this.life = 0;
-			this.handleSpeek("你是谁？快夸我！");
-		}
+		this.$nextTick(e => {
+			let key = window.prompt(
+				"轻触=翻开格子\n按住格子往四周拽=插小旗子",
+				"请输入金手指哦"
+			);
+			if (
+				[
+					"小怂怂",
+					"小瑶瑶",
+					"陈瑶",
+					"陈优秀",
+					"优秀",
+					"我爱土鸡",
+					"土鸡我爱你",
+					"我喜欢你哦",
+					"你好帅",
+					"你好厉害"
+				].indexOf(key) !== -1
+			) {
+				_this.life = 3;
+				_this.handleSpeek("小怂怂我喜欢你哦");
+			} else {
+				_this.life = 0;
+				_this.handleSpeek("你是谁？快夸我！");
+			}
+			_this.restart();
+		});
 	},
 	methods: {
 		restart(auto) {
