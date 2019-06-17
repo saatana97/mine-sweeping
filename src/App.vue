@@ -1,9 +1,9 @@
 <template>
 	<div id="app">
 		<div class="header">
-			<p>{{mine-flag}}</p>
+			<p>剩余：{{mine-flag}}</p>
 			<button @click="restart(false)">当前难度：{{level+1}}</button>
-			<p>{{time}}</p>
+			<p>用时：{{time}}</p>
 		</div>
 		<div class="center" :style="centerStyle">
 			<div
@@ -204,6 +204,7 @@ export default {
 					if (this.life > 0) {
 						box.flag();
 						this.life--;
+						this.flag++;
 						alert(`你还有${this.life}次机会踩到地雷自动插旗哦`);
 					} else {
 						this.over = true;
@@ -232,9 +233,18 @@ export default {
 			this.over = this.boxs.every(item => item.status !== 0);
 			if (this.over) {
 				clearInterval(this.clearId);
-				this.opts[this.level].scope = localStorage[
-					"scope" + (this.level + 1)
-				] = this.time;
+				if (this.time < this.opts[this.level].scope) {
+					this.opts[this.level].scope = localStorage[
+						"scope" + (this.level + 1)
+					] = this.time;
+					alert(
+						`小怂怂越来越聪明了哦！这次居然只用了${
+							this.time
+						}秒就赢了哦`
+					);
+				} else {
+					alert("小怂怂真厉害呀又赢了哦");
+				}
 			}
 		},
 		handleBoxClass(item) {
@@ -310,6 +320,7 @@ html {
 				justify-content: space-around;
 			}
 			.center {
+				margin: 2% auto;
 				display: flex;
 				flex-wrap: wrap;
 				.box {
